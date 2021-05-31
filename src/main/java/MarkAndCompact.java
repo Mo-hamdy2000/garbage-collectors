@@ -5,37 +5,26 @@ public class MarkAndCompact {
 
     public static void main(String[] args) throws Exception {
 
-        if (args.length < 4) {
-            System.err.println("Lacking arguments expected " + 4 + " received " + (args.length));
-            return;
-        }
-
-        InputHandler inputHandler = new InputHandler();
-        inputHandler.setHeapFile(args[0]);
-        inputHandler.setRootsFile(args[1]);
-        inputHandler.setPointersFile(args[2]);
-        String outputFile = args[3];
-
+        InputHandler inputHandler = new InputHandler(args);
         inputHandler.getInput();
-
         HashMap<Integer, HeapObject> heap = inputHandler.getHeap();
         List<Integer> roots = inputHandler.getRoots();
+        FileWriter csvWriter = inputHandler.getOutputFile();
 
         for (int root: roots)
             markFromRoot(heap.get(root));
+
         List<HeapObject> sortingList = new ArrayList<>();
         for (Map.Entry<Integer, HeapObject> ho: heap.entrySet()) {
             if (ho.getValue().isMarked())
                 sortingList.add(ho.getValue());
         }
         sortingList.sort(Comparator.comparingInt(HeapObject::getMemoryStart));
-        FileWriter csvWriter = new FileWriter("src/main/resources/" + outputFile);
+
         int nextByte = 0;
         for (HeapObject heapObject: sortingList) {
             nextByte = heapObject.move(nextByte);
-            String record = heapObject.getIdentifier() + "," + heapObject.getMemoryStart() + "," + heapObject.getMemoryEnd();
-            csvWriter.append(record);
-            csvWriter.append("\n");
+            csvWriter.append(heapObject.toString()).append("\n");
         }
         csvWriter.flush();
         csvWriter.close();
