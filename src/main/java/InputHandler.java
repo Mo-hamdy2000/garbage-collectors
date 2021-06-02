@@ -9,6 +9,7 @@ public class InputHandler {
     private HashMap<Integer, HeapObject> heap;
     private List<Integer> roots;
     private String outputFile;
+    private final String currentDir = System.getProperty("user.dir");
 
     public InputHandler(String[] args) {
         this.args = args;
@@ -33,7 +34,7 @@ public class InputHandler {
 
         try {
             /*read heap file*/
-            InputStream inputStream = this.getClass().getResourceAsStream("/" + heapFile);
+            InputStream inputStream = new FileInputStream(currentDir + "/../resources/" + heapFile);
             BufferedReader fileReader = new BufferedReader(new InputStreamReader(inputStream));
             String row;
             while ((row = fileReader.readLine()) != null) {
@@ -46,7 +47,7 @@ public class InputHandler {
             fileReader.close();
 
             /*read roots file*/
-            inputStream = this.getClass().getResourceAsStream("/" + rootsFile);
+            inputStream = new FileInputStream(currentDir + "/../resources/" + rootsFile);
             fileReader = new BufferedReader(new InputStreamReader(inputStream));
             while ((row = fileReader.readLine()) != null) {
                 roots.add(Integer.parseInt(row));
@@ -55,7 +56,7 @@ public class InputHandler {
             fileReader.close();
 
             /*read pointers file*/
-            inputStream = this.getClass().getResourceAsStream("/" + pointersFile);
+            inputStream = new FileInputStream(currentDir + "/../resources/" + pointersFile);
             fileReader = new BufferedReader(new InputStreamReader(inputStream));
             while ((row = fileReader.readLine()) != null) {
                 String[] data = row.replaceAll("[^\\d,]", "").split(",");
@@ -87,7 +88,7 @@ public class InputHandler {
 
     public FileWriter getOutputFile() throws IOException {
         try {
-            return new FileWriter("src/main/resources/" + outputFile);
+            return new FileWriter(currentDir + "/../resources/" + outputFile);
         } catch (IOException e) {
             throw new IOException("Output file not found");
         }
