@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,10 +33,11 @@ public class InputHandler {
 
         try {
             /*read heap file*/
-            BufferedReader fileReader = new BufferedReader(new FileReader("src/main/resources/" + heapFile));
+            InputStream inputStream = this.getClass().getResourceAsStream("/" + heapFile);
+            BufferedReader fileReader = new BufferedReader(new InputStreamReader(inputStream));
             String row;
             while ((row = fileReader.readLine()) != null) {
-                String[] data = row.replaceAll("\\p{C}", "").split(",");
+                String[] data = row.replaceAll("[^\\d,]", "").split(",");
                 HeapObject heapObject = new HeapObject( Integer.parseInt(data[0]),
                         Integer.parseInt(data[1]),
                         Integer.parseInt(data[2]));
@@ -48,7 +46,8 @@ public class InputHandler {
             fileReader.close();
 
             /*read roots file*/
-            fileReader = new BufferedReader(new FileReader("src/main/resources/" + rootsFile));
+            inputStream = this.getClass().getResourceAsStream("/" + rootsFile);
+            fileReader = new BufferedReader(new InputStreamReader(inputStream));
             while ((row = fileReader.readLine()) != null) {
                 roots.add(Integer.parseInt(row));
             }
@@ -56,9 +55,10 @@ public class InputHandler {
             fileReader.close();
 
             /*read pointers file*/
-            fileReader = new BufferedReader(new FileReader("src/main/resources/" + pointersFile));
+            inputStream = this.getClass().getResourceAsStream("/" + pointersFile);
+            fileReader = new BufferedReader(new InputStreamReader(inputStream));
             while ((row = fileReader.readLine()) != null) {
-                String[] data = row.replaceAll("\\p{C}", "").split(",");
+                String[] data = row.replaceAll("[^\\d,]", "").split(",");
                 int parentIdentifier = Integer.parseInt(data[0]);
                 int childIdentifier = Integer.parseInt(data[1]);
                 heap.get(parentIdentifier).addChild(heap.get(childIdentifier));
@@ -71,6 +71,7 @@ public class InputHandler {
             System.exit(-1);
         } catch (NumberFormatException e) {
             System.err.println("Error: Invalid format\nPlease put the files in expected format");
+            e.printStackTrace();
             System.exit(-1);
         }
 

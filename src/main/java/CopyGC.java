@@ -1,5 +1,3 @@
-import org.jetbrains.annotations.NotNull;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,7 +31,6 @@ public class CopyGC {
 
     }
 
-    @NotNull
     private static List<HeapObject> collectGarbage(List<Integer> roots, HashMap<Integer, HeapObject> oldHeap) {
         List<HeapObject> secondHeap = new ArrayList<>();
         int nextByte = 0;
