@@ -1,9 +1,10 @@
+import org.jetbrains.annotations.NotNull;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import org.jetbrains.annotations.NotNull;
 
 public class CopyGC {
 
@@ -42,6 +43,7 @@ public class CopyGC {
         /*put all roots in the new heap*/
         for (Integer rootID : roots) {
             HeapObject heapObj = oldHeap.get(rootID);
+            if (heapObj.isMarked()) continue;
             nextByte = heapObj.move(nextByte);
             secondHeap.add(heapObj);
             heapObj.setMarked();
