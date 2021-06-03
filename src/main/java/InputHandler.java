@@ -10,6 +10,7 @@ public class InputHandler {
     private List<Integer> roots;
     private String outputFile;
     private final String currentDir = System.getProperty("user.dir");
+    private final String sep = System.getProperty("file.separator");
 
     public InputHandler(String[] args) {
         this.args = args;
@@ -34,7 +35,7 @@ public class InputHandler {
 
         try {
             /*read heap file*/
-            InputStream inputStream = new FileInputStream(currentDir + "/../resources/" + heapFile);
+            InputStream inputStream = new FileInputStream(currentDir + sep + heapFile);
             BufferedReader fileReader = new BufferedReader(new InputStreamReader(inputStream));
             String row;
             while ((row = fileReader.readLine()) != null) {
@@ -47,7 +48,7 @@ public class InputHandler {
             fileReader.close();
 
             /*read roots file*/
-            inputStream = new FileInputStream(currentDir + "/../resources/" + rootsFile);
+            inputStream = new FileInputStream(currentDir + sep + rootsFile);
             fileReader = new BufferedReader(new InputStreamReader(inputStream));
             while ((row = fileReader.readLine()) != null) {
                 roots.add(Integer.parseInt(row));
@@ -56,7 +57,7 @@ public class InputHandler {
             fileReader.close();
 
             /*read pointers file*/
-            inputStream = new FileInputStream(currentDir + "/../resources/" + pointersFile);
+            inputStream = new FileInputStream(currentDir + sep + pointersFile);
             fileReader = new BufferedReader(new InputStreamReader(inputStream));
             while ((row = fileReader.readLine()) != null) {
                 String[] data = row.replaceAll("[^\\d,]", "").split(",");
@@ -88,7 +89,7 @@ public class InputHandler {
 
     public FileWriter getOutputFile() throws IOException {
         try {
-            return new FileWriter(currentDir + "/../resources/" + outputFile);
+            return new FileWriter(outputFile);
         } catch (IOException e) {
             throw new IOException("Output file not found");
         }
